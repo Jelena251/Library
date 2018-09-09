@@ -1,0 +1,84 @@
+
+
+<div class="row">
+  <div class="col-xs-12">
+    <form [formGroup] = "bookEdit" (ngSubmit) = "onSubmit()">
+      <div class="row">
+          <div class="col-xs-12">
+              <button 
+                    type="submit"
+                      class="btn btn-success"
+                      [disabled]="!bookEdit.valid">Sacuvaj</button>
+              <button type="button" class="btn btn-danger" (click)="onCancel()">Otkazi</button>
+          </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label for="name"> Ime</label>
+            <input type="text"
+                  id="name"
+                  class="form-control"
+                  formControlName= 'name'>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="imagePath"> Slika</label>
+              <input type="text"
+                    id="imagePath"
+                    class="form-control"
+                    formControlName= 'imagePath'>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-xs-12">
+              <div class="form-group">
+                <label for="preview"> Opis</label>
+                <input type="text"
+                      id="preview"
+                      class="form-control"
+                      formControlName= 'preview'>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+              <div class="col-xs-12">
+                <div class="form-group">
+                  <label for="price"> Cena</label>
+                  <input type="text"
+                        id="price"
+                        class="form-control"
+                        formControlName= 'price'>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-xs-12" formArrayName= "authors">
+                <div class="row"
+                  *ngFor = "let author of bookEdit.get('authors').controls; let i = index"
+                  [formGroupName] = "i"
+                  style="margin-top:10px">
+                
+                    <select formControlName= "authors.name" ng-options="x for x in authors">
+                    </select>
+                    <div class="col-xs-2">
+                      <button class="btn btn-danger"type="button" (click) = "onDeleteIngredient(i)" >X</button>
+                    </div>
+
+
+                </div>
+              </div>
+            </div>
+          
+    </form>
+  </div>
+</div>
