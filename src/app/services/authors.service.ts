@@ -7,15 +7,13 @@ import { Subject } from "rxjs";
 export class AuthorsService{
     
     authorsChanged = new Subject<Author[]>();
-    private authors : Author[] = [new Author("ajfjsa", "Da ", "Da "), new Author("ajfjs22a", "Da ", "Da ")];
+    private authors : Author[] =[];
 
     constructor(private http:Http){
-        console.log(" new!");
-     }
+        this.getAuthorsFromDb();
+    }
 
     getAuthors(){
-        console.log(this);
-        //this.saveAuthorToDB();
         return this.authors.slice();
     }
 
@@ -24,41 +22,48 @@ export class AuthorsService{
     }
 
     addAuthor(author : Author){
-        console.log(author);
-        console.log(this);
-        console.log(this.authors);
         this.authors.push(author);
-        //this.saveAuthorToDB();
         this.authorsChanged.next(this.authors.slice());
     }
 
     updateAuthor(index:number, newAuthor : Author){
         this.authors[index] = newAuthor;
-        //this.saveAuthorToDB();
         this.authorsChanged.next(this.authors.slice());
+        this.storeAuthorsToDb().subscribe(
+            (response :Response) => {
+                console.log(response);
+            }
+        );
     }
 
     deleteAuthor(index: number){
         this.authors.splice(index, 1);
-        //this.saveAuthorToDB();
         this.authorsChanged.next(this.authors.slice());
+        this.storeAuthorsToDb().subscribe(
+            (response :Response) => {
+                console.log(response);
+            }
+        );
     }
-
-    refreshData(){
-        this.http.get("https://booksproject-dbcdf.firebaseio.com/authors.json").
-                    subscribe(
-                        (response : Response) =>{
-                            const authors:Author[] = response.json();
-                            this.authors = authors;
-                        });
-    }
-/*
-    saveAuthorToDB(){
-        this.dataService.storeData("https://booksproject-dbcdf.firebaseio.com/authors.json", this.authors[0]);
-    }*/
 
     setAuthors(authors:Author[]){
         this.authors = authors;
         this.authorsChanged.next(this.authors.slice())
+    }
+
+    getAuthorsFromDb(){
+        return this.http.get("https://library-b739f.firebaseio.com/authors.json")
+        .subscribe(
+            (response:Response) =>{
+                const authors:Author[] = response.json();
+                if(authors !== null){
+                    this.authors =authors;
+                }
+            });
+    }
+
+    storeAuthorsToDb(){
+        return this.http.put("https://library-b739f.firebaseio.com/authors.json", this.authors);
+   
     }
 }

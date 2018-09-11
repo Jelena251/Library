@@ -12,7 +12,13 @@ export class BooksService{
     booksChanged = new Subject<Book[]>();
     private books : Book[] = [];
 
-    constructor(private http:Http, private shService: ShoppingCartService ){ }
+    constructor(private http:Http, 
+        private shService: ShoppingCartService){
+        this.getBooksFromDb();
+        if(this.books === null){
+            this.books = [];
+        }
+    }
 
     getBooks(){
         return this.books.slice();
@@ -24,14 +30,22 @@ export class BooksService{
 
     addBook(book : Book){
         this.books.push(book);
-        //this.saveBookToDB();
         this.booksChanged.next(this.books.slice());
+        this.storeBooksToDb().subscribe(
+            (response :Response) => {
+                console.log(response);
+            }
+        );
     }
 
     updateBook(index:number, newBook : Book){
         this.books[index] = newBook;
-       // this.saveBookToDB();
         this.booksChanged.next(this.books.slice());
+        this.storeBooksToDb().subscribe(
+            (response :Response) => {
+                console.log(response);
+            }
+        );
     }
 
     addToShoppingCart(book:Book){
@@ -40,21 +54,12 @@ export class BooksService{
 
     deleteBook(index: number){
         this.books.splice(index, 1);
-       // this.saveBookToDB();
         this.booksChanged.next(this.books.slice());
-    }
-
-    refreshData(){
-        this.http.get("https://booksproject-dbcdf.firebaseio.com/books.json").
-                    subscribe(
-                        (response : Response) =>{
-                            const books:Book[] = response.json();
-                            this.books = books;
-                        });
-    }
-
-    private saveBookToDB(){
-        this.http.put("https://booksproject-dbcdf.firebaseio.com/books.json", this.books);
+        this.storeBooksToDb().subscribe(
+            (response :Response) => {
+                console.log(response);
+            }
+        );
     }
 
     setBooks(books:Book[]){
@@ -62,4 +67,18 @@ export class BooksService{
         this.booksChanged.next(this.books.slice())
     }
 
+    storeBooksToDb(){
+        return this.http.put("https://library-b739f.firebaseio.com/books.json", this.getBooks());
+    }
+
+    getBooksFromDb(){
+        return this.http.get("https://library-b739f.firebaseio.com/books.json")
+        .subscribe(
+            (response:Response) =>{
+                const books:Book[] = response.json();
+                if(books !== null ){
+                    this.setBooks(books);
+                }
+            });
+    }
 }

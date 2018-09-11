@@ -6,6 +6,7 @@ import { Author } from '../../../model/author.model';
 import { AuthorsService } from '../../../services/authors.service';
 import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Response } from '@angular/http';
 
 @Component({
   selector: 'app-book-edit',
