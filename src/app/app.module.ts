@@ -11,12 +11,18 @@ import { BookDetailsComponent } from './components/books/book-details/book-detai
 import { BookListComponent } from './components/books/book-list/book-list.component';
 import { HttpModule } from '@angular/http';
 import { BookItemComponent } from './components/books/book-list/book-item/book-item.component';
-import { DefaultBookComponentComponent } from './components/books/default-book-component/default-book-component.component';
 import { DefaultBookComponent } from './components/books/default-book/default-book.component';
 import { BookEditComponent } from './components/books/book-edit/book-edit.component';
 import { BooksService } from './services/books.service';
 import { ShoppingCartService } from './services/shopping.cart.service';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AuthorsService } from './services/authors.service';
+import { DropdownDirective } from './directives/dropdown.directive';
+import { AuthorListComponent } from './components/authors/author-list/author-list.component';
+import { AuthorDetailsComponent } from './components/authors/author-details/author-details.component';
+import { AuthorEditComponent } from './components/authors/author-edit/author-edit.component';
+import { AuthorItemComponent } from './components/authors/author-list/author-item/author-item.component';
+import { ShoppingListComponent } from './components/shopping-cart/shopping-list/shopping-list.component';
 
 @NgModule({
   declarations: [
@@ -28,17 +34,24 @@ import { ReactiveFormsModule } from '@angular/forms';
     BookDetailsComponent,
     BookListComponent,
     BookItemComponent,
-    DefaultBookComponentComponent,
     DefaultBookComponent,
-    BookEditComponent
+    BookEditComponent,
+    DropdownDirective,
+    AuthorListComponent,
+    AuthorDetailsComponent,
+    AuthorEditComponent,
+    AuthorItemComponent,
+    ShoppingListComponent
   ],
   imports: [
     BrowserModule,
+    FormsModule,
+    BrowserModule,
     AppRoutingModule,
     HttpModule,
-    ReactiveFormsModule 
+    ReactiveFormsModule
   ],
-  providers: [BooksService, ShoppingCartService],
+  providers: [BooksService, ShoppingCartService, AuthorsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

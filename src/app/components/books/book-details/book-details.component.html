@@ -1,3 +1,69 @@
-<p>
-  book-details works!
-</p>
+<div class="row">
+    <div class="col-xs-12">
+      <img
+        [src]="book.imagePath"
+        alt="{{ book.name }}"
+        class="img-responsive"
+        style="max-height: 300px;">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-8">
+      <h1>{{ book.name }}</h1>
+    </div>
+    <div class="col-xs-2 btn-info">
+      <div class="row">
+        Cena:
+      </div>
+      <div class="row">
+
+          <h1>{{ book.price }}</h1>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="btn-group" 
+      appDropdown>
+        <button
+          type="button"
+          class="btn btn-primary dropdown-toggle"
+          >
+          Akcije <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a (click) = "addToShoppingList()" style="cursor:pointer;">Dodaj u korpu</a></li>
+          <li><a (click) = "onAddToEdit()" style="cursor: pointer">Izmeni</a></li>
+          <li><a style="cursor: pointer" (click) = "onDeleteBook()">Obrisi</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      {{ book.preview }}
+    </div>
+  </div>
+  <div class="row" *ngIf ="book!==null || book.authors !== null">
+    <div class="col-xs-12">
+      <ul class="list-group">
+        <p><b>Autori:</b></p>
+        <li class="list-group-item"
+          *ngFor = "let author of book.authors">
+          {{ author.name }} {{ author.surname}}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row" *ngIf ="book!==null || book.genres !== null">
+      <div class="col-xs-12">
+        <ul class="list-group">
+          <p><b>Zanr:</b></p>
+          <li  *ngFor = "let g of book.genres">
+            {{ g}}
+          </li>
+        </ul>
+  </div>
+ </div>
+  

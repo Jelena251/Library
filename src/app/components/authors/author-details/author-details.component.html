@@ -1,0 +1,36 @@
+<div class="row">
+    <div class="col-xs-12">
+      <img
+        [src]="author.imagePath"
+        alt="{{ author.name }}"
+        class="img-responsive"
+        style="max-height: 300px;">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-8">
+      <h1>{{ author.name }} {{author.surname}}</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="btn-group" 
+      appDropdown>
+        <button
+          type="button"
+          class="btn btn-primary dropdown-toggle"
+          >
+          Akcije <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a (click) = "onAddToEdit()" style="cursor: pointer">Izmeni</a></li>
+          <li><a style="cursor: pointer" (click) = "onDeleteAuthor()">Obrisi</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      {{ author.history }}
+    </div>
+  </div>

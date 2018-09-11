@@ -24,28 +24,23 @@ export class BooksService{
 
     addBook(book : Book){
         this.books.push(book);
-        this.saveBookToDB();
+        //this.saveBookToDB();
         this.booksChanged.next(this.books.slice());
     }
 
     updateBook(index:number, newBook : Book){
         this.books[index] = newBook;
-        this.saveBookToDB();
+       // this.saveBookToDB();
         this.booksChanged.next(this.books.slice());
     }
 
-    addToShoppingCart(index:number){
-        const book = this.books[index];
-        if(book !== null){
+    addToShoppingCart(book:Book){
              this.shService.addBookToCart(book);
-        }else{
-            console.log("There is no book with index " + index);
-        }
     }
 
     deleteBook(index: number){
         this.books.splice(index, 1);
-        this.saveBookToDB();
+       // this.saveBookToDB();
         this.booksChanged.next(this.books.slice());
     }
 
@@ -61,4 +56,10 @@ export class BooksService{
     private saveBookToDB(){
         this.http.put("https://booksproject-dbcdf.firebaseio.com/books.json", this.books);
     }
+
+    setBooks(books:Book[]){
+        this.books = books;
+        this.booksChanged.next(this.books.slice())
+    }
+
 }

@@ -8,16 +8,21 @@ export class ShoppingCartService{
     private price : number;
 
     constructor(){
-        this.price = 0;
+        this.price=0;
     }
 
     addBookToCart(book:Book){
         this.books.push(book);
-        this.price+= book.price; 
+        this.price = +this.price + +book.price;
+        console.log(this.price);
         this.shoppingCartChanged.next(this.books.slice());
     }
 
-    getPrice(){
+    getBooks(){
+        return this.books.slice();
+    }
+
+    getPrice():number{
         return this.price;
     }
 }

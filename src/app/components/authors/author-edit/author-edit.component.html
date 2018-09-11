@@ -1,0 +1,77 @@
+
+
+<div class="row">
+    <div class="col-xs-12">
+      <form [formGroup] = "authorEdit" (ngSubmit) = "onSubmit()">
+        
+        <div class="row">
+            <div class="col-xs-12">
+                <button 
+                      type="submit"
+                        class="btn btn-success"
+                        [disabled]="!authorEdit.valid">Sacuvaj</button>
+                <button type="button" class="btn btn-danger" (click)="onCancel()">Otkazi</button>
+            </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="name"> Ime</label>
+              <input type="text"
+                    id="name"
+                    class="form-control"
+                    formControlName= 'name'>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="surname"> Prezime</label>
+              <input type="text"
+                    id="surname"
+                    class="form-control"
+                    formControlName= 'surname'>
+            </div>
+          </div>
+        </div>
+  
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="imagePath"> Slika</label>
+              <input type="text"
+                    id="imagePath"
+                    class="form-control"
+                    formControlName= 'imagePath'
+                    #imagePath>
+            </div>
+          </div>
+        </div>
+  
+        <div class="row">
+          <div class="col-xs-12">
+            <img [src]="imagePath.value" class="img-responsive" style="max-width: 200px; max-height: 200px">
+          </div>
+        </div>
+  
+  
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="bio"> Biografija</label>
+              <textarea type="text"
+                    id="bio"
+                    class="form-control"
+                    rows="6"
+                    formControlName= 'history'></textarea>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+  

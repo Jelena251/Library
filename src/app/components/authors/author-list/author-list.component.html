@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="col-xs-12">
+      <button class="btn btn-success" (click) = "onAddNewAuthor()">Dodaj autora</button>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-xs-12">
+      <app-author-item
+        *ngFor="let a of authors; let i = index"
+        [author]="a"
+        [index]="i"></app-author-item>
+    </div>
+  </div>

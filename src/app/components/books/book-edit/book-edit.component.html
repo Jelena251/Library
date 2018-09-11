@@ -31,10 +31,17 @@
               <input type="text"
                     id="imagePath"
                     class="form-control"
-                    formControlName= 'imagePath'>
+                    formControlName= 'imagePath'
+                    #imagePath>
             </div>
           </div>
         </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+              <img [src]="imagePath.value" class="img-responsive" style="max-width: 200px; max-height: 200px">
+            </div>
+          </div>
 
 
         <div class="row">
@@ -63,21 +70,67 @@
 
             <div class="row">
               <div class="col-xs-12" formArrayName= "authors">
+                <label for="authors"> Autori:</label>
                 <div class="row"
                   *ngFor = "let author of bookEdit.get('authors').controls; let i = index"
                   [formGroupName] = "i"
                   style="margin-top:10px">
-                
-                    <select formControlName= "authors.name" ng-options="x for x in authors">
+                  <div class="col-xs-8">
+                    <select name="autor" id="autor" class="form-control" formControlName="id">
+                      <option value=null disabled selected hidden>--Select--</option>
+                      <option *ngFor ="let a of authors; let i =index" [value]="i">
+                        {{a.name}} {{a.surname}}
+                      </option>
                     </select>
+                    
+                  </div>
                     <div class="col-xs-2">
-                      <button class="btn btn-danger"type="button" (click) = "onDeleteIngredient(i)" >X</button>
+                      <button class="btn btn-danger"type="button" (click) = "onDeleteAuthor(i)" >X</button>
                     </div>
 
 
                 </div>
+                <div class="row">
+                    <div class="col-xs-2">
+                      <button type="button" class="btn btn-success" (click) = "onAddAuthor()">
+                        Dodaj autora
+                      </button>
+                    </div>
+                  </div>
               </div>
             </div>
+
+            <div class="row">
+                <div class="col-xs-12" formArrayName= "genres">
+                  <label for="authors"> Zanr:</label>
+                  <div class="row"
+                    *ngFor = "let author of bookEdit.get('genres').controls; let i = index"
+                    [formGroupName] = "i"
+                    style="margin-top:10px">
+                    <div class="col-xs-8">
+                      <select name="autor" id="autor" class="form-control" formControlName="genre">
+                        <option value=null disabled selected hidden>--Select--</option>
+                        <option *ngFor ="let g of genres; let i =index" [value]="g">
+                          {{g}}
+                        </option>
+                      </select>
+                      
+                    </div>
+                      <div class="col-xs-2">
+                        <button class="btn btn-danger"type="button" (click) = "onDeleteGenre(i)" >X</button>
+                      </div>
+  
+  
+                  </div>
+                  <div class="row">
+                      <div class="col-xs-2">
+                        <button type="button" class="btn btn-success" (click) = "onAddGenre()">
+                          Dodaj zanr
+                        </button>
+                      </div>
+                    </div>
+                </div>
+              </div>
           
     </form>
   </div>

@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import {FormGroup, FormControl, FormArray, Validators} from '@angular/forms';
 import { Book } from '../../../model/book.model';
 import { BooksService } from '../../../services/books.service';
-import { GenreTypes } from '../../../model/model.types/genre.types';
 import { Author } from '../../../model/author.model';
+import { AuthorsService } from '../../../services/authors.service';
+import { Subscription } from 'rxjs';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'app-book-edit',
@@ -15,15 +17,32 @@ export class BookEditComponent implements OnInit {
   id:number;
   bookEdit : FormGroup;
   editMode : boolean = false;
+  authorSub :Subscription;
 
-  genres;
-  authors : string[];
+  genres = ["Drama", "Fiction", "Historic", "Horror", "Romance", "Thriler"];
+  authors:Author[];
 
-  constructor(private bookService : BooksService) { }
+
+  constructor(private bookService : BooksService, 
+            private authorService:AuthorsService,
+            private router:Router,
+            private activeRoute : ActivatedRoute) { }
 
   ngOnInit() {
-    this.genres = Object.keys(GenreTypes).forEach(key => {GenreTypes[key]});
-    this.authors = ["Author 1",  "Author 2"]; 
+    this.activeRoute.params.subscribe(
+      (params: Params) => {
+        this.id = +params['id'];
+        this.editMode = params['id'] != null;
+        this.initializeForm();
+        this.authorSub = this.authorService.authorsChanged.subscribe(
+          (authors : Author[]) => {
+            this.authors = authors;
+          }
+        );
+        this.authors=this.authorService.getAuthors();
+      }
+    );
+
   }
 
   initializeForm(){
@@ -42,9 +61,7 @@ export class BookEditComponent implements OnInit {
       if(currentBook['authors']){
         for(let author of currentBook.authors){
           authors.push(new FormGroup({
-            'name' : new FormControl(author.name, Validators.required),
-            'surname' : new FormControl(author.surname),
-            'history': new FormControl(author.history)    
+            'id' : new FormControl(author.name, Validators.required)
           }));
         }
       }
@@ -64,12 +81,59 @@ export class BookEditComponent implements OnInit {
     });
   }
 
+  onAddAuthor(){
+    (<FormArray>this.bookEdit.get('authors')).push(new FormGroup({
+      'id':new FormControl(null)
+    }));
+  }
+
+  onDeleteAuthor(index:number){
+    (<FormArray>this.bookEdit.get('authors')).removeAt(index);
+  }
+
+  onAddGenre(){
+    (<FormArray>this.bookEdit.get('genres')).push(new FormGroup({
+      'genre': new FormControl()
+    }));
+  }
+
+  onDeleteGenre(index:number){
+    (<FormArray>this.bookEdit.get('genres')).removeAt(index);
+  }
+
   onSubmit(){
-    
+
+    let book:Book = this.getFormValue();
+    if(this.editMode){
+      this.bookService.updateBook(this.id, book);
+    }else{
+      this.bookService.addBook(book);
+    }
+    this.onCancel();
+
+  }
+
+  private getFormValue():Book{
+    let book:Book = new Book();
+    book.name= this.bookEdit.value.name;
+    book.imagePath= this.bookEdit.value.imagePath;
+    book.preview= this.bookEdit.value.preview;
+    book.price= this.bookEdit.value.price;
+    book.genres = [];
+    book.authors=[];
+    let autori = this.bookEdit.value.authors;
+    for(let i=0; i< autori.length;i++){
+      book.authors.push(this.authorService.getAuthorByIndex(autori[i].id));
+    }
+    let genres = this.bookEdit.value.genres;
+    for(let i=0; i< genres.length;i++){
+      book.genres.push(genres[i].genre);
+    }
+    return book;
   }
 
   onCancel(){
-    console.log("On cancel");
+    this.router.navigate(['../'],  {relativeTo:this.activeRoute});
   }
-  
+
 }
