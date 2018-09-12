@@ -30,20 +30,29 @@ export class BookEditComponent implements OnInit {
             private activeRoute : ActivatedRoute) { }
 
   ngOnInit() {
+    this.authors=this.authorService.getAuthors();
+    this.authorSub = this.authorService.authorsChanged.subscribe(
+      (authors : Author[]) => {
+        this.authors = authors;
+      }
+    );
     this.activeRoute.params.subscribe(
       (params: Params) => {
         this.id = +params['id'];
         this.editMode = params['id'] != null;
         this.initializeForm();
-        this.authorSub = this.authorService.authorsChanged.subscribe(
-          (authors : Author[]) => {
-            this.authors = authors;
-          }
-        );
-        this.authors=this.authorService.getAuthors();
       }
     );
 
+  }
+
+  findAuthor(auth : Author){
+    for(let i= 0; i<this.authors.length;i++){
+      if(this.authors[i] === auth){
+        return i; 
+      }
+    }
+    return -1;
   }
 
   initializeForm(){
@@ -68,7 +77,10 @@ export class BookEditComponent implements OnInit {
       }
       if(currentBook['genres']){
         for(let genre of currentBook.genres){
-          genres.push(new FormControl(genre));
+           genres.push(new FormGroup({
+            'genre' : new FormControl(genre)
+           }
+           ));
         }
       }
     }
