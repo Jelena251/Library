@@ -19,6 +19,8 @@ export class BookEditComponent implements OnInit {
   bookEdit : FormGroup;
   editMode : boolean = false;
   authorSub :Subscription;
+  get authorData() { return <FormArray>this.bookEdit.get('authors'); }
+  get genresData() { return <FormArray>this.bookEdit.get('genres'); }
 
   genres = ["Drama", "Fiction", "Historic", "Horror", "Romance", "Thriler"];
   authors:Author[];
@@ -30,12 +32,13 @@ export class BookEditComponent implements OnInit {
             private activeRoute : ActivatedRoute) { }
 
   ngOnInit() {
-    this.authors=this.authorService.getAuthors();
-    this.authorSub = this.authorService.authorsChanged.subscribe(
-      (authors : Author[]) => {
-        this.authors = authors;
-      }
-    );
+    this.authorService.getAuthorsFromDb().subscribe(
+      (response:Response) =>{
+          const authors:Author[] = response.json();
+          if(authors !== null){
+              this.authors =authors;
+          }
+      });
     this.activeRoute.params.subscribe(
       (params: Params) => {
         this.id = +params['id'];
@@ -55,6 +58,8 @@ export class BookEditComponent implements OnInit {
     return -1;
   }
 
+
+
   initializeForm(){
     let name = "";
     let imagePath ="";
@@ -71,7 +76,7 @@ export class BookEditComponent implements OnInit {
       if(currentBook['authors']){
         for(let author of currentBook.authors){
           authors.push(new FormGroup({
-            'id' : new FormControl(author.name, Validators.required)
+            'name' : new FormControl(author, Validators.required)
           }));
         }
       }
@@ -96,7 +101,7 @@ export class BookEditComponent implements OnInit {
 
   onAddAuthor(){
     (<FormArray>this.bookEdit.get('authors')).push(new FormGroup({
-      'id':new FormControl(null)
+      'name':new FormControl(null)
     }));
   }
 
@@ -136,7 +141,7 @@ export class BookEditComponent implements OnInit {
     book.authors=[];
     let autori = this.bookEdit.value.authors;
     for(let i=0; i< autori.length;i++){
-      book.authors.push(this.authorService.getAuthorByIndex(autori[i].id));
+      book.authors.push(autori[i].name);
     }
     let genres = this.bookEdit.value.genres;
     for(let i=0; i< genres.length;i++){

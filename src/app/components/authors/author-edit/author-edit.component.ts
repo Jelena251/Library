@@ -28,7 +28,6 @@ export class AuthorEditComponent implements OnInit {
         this.initializeForm();
       }
     );
-
   }
 
   initializeForm(){

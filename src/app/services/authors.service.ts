@@ -10,7 +10,16 @@ export class AuthorsService{
     private authors : Author[] =[];
 
     constructor(private http:Http){
-        this.getAuthorsFromDb();
+        this.getAuthorsFromDb().subscribe(
+            (response:Response) =>{
+                const authors:Author[] = response.json();
+                if(authors !== null){
+                    this.setAuthors(authors);
+                }
+            });
+        if(this.authors === null){
+            this.authors = [];
+        }
     }
 
     getAuthors(){
@@ -53,17 +62,11 @@ export class AuthorsService{
 
     getAuthorsFromDb(){
         return this.http.get("https://library-b739f.firebaseio.com/authors.json")
-        .subscribe(
-            (response:Response) =>{
-                const authors:Author[] = response.json();
-                if(authors !== null){
-                    this.authors =authors;
-                }
-            });
+        
     }
 
     storeAuthorsToDb(){
-        return this.http.put("https://library-b739f.firebaseio.com/authors.json", this.authors);
+        return this.http.put("https://library-b739f.firebaseio.com/authors.json", this.getAuthors());
    
     }
 }
